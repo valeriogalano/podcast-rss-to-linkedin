@@ -16,16 +16,26 @@
 
 ## Come funziona
 
-Il workflow controlla il feed RSS del podcast e pubblica i nuovi episodi sull'account LinkedIn tramite le API ufficiali. Gli episodi già pubblicati vengono tracciati per evitare duplicati. Il workflow può essere attivato anche manualmente dalla scheda Actions.
+Il workflow controlla il feed RSS del podcast e pubblica i nuovi episodi sull'account LinkedIn tramite le API ufficiali. Gli episodi già pubblicati vengono tracciati in `published_episodes.txt` per evitare duplicati. Il workflow può essere attivato anche manualmente dalla scheda Actions.
 
-> **Nota sull'autenticazione:** Le API di LinkedIn non restituiscono un `refresh_token`. L'`access_token` ha validità di 60 giorni e richiede un rinnovo manuale periodico.
+> **Nota sull'autenticazione:** Le API di LinkedIn non restituiscono un `refresh_token`. L'`access_token` ha validità di 60 giorni e richiede un rinnovo manuale periodico tramite lo script `auth.py` del repository [readwise-to-linkedin](https://github.com/valeriogalano/pensieriincodice-news-to-linkedin).
+
+### Monitoraggio scadenza token
+
+Il workflow controlla ad ogni esecuzione la variabile `TOKEN_CREATED_AT` per verificare la scadenza del token (60 giorni):
+
+- **≤10 giorni alla scadenza** → warning nel log della build
+- **≤5 giorni alla scadenza** → errore, la build fallisce con messaggio chiaro
+
+`TOKEN_CREATED_AT` viene aggiornato automaticamente quando si rinnova il token tramite `auth.py` (se questo repository è configurato in `GH_CSV`).
 
 ---
 
 ## Requisiti
 
+- Python 3.11+
 - Un account LinkedIn con applicazione OAuth configurata
-- Uno o più feed RSS di podcast
+- Un feed RSS del podcast
 
 ---
 
@@ -45,7 +55,7 @@ In **Settings → Secrets and variables → Actions**, aggiungi i seguenti **Sec
 | Secret | Descrizione |
 |---|---|
 | `LINKEDIN_ACCESS_TOKEN` | Access token LinkedIn (validità 60 giorni) |
-| `LINKEDIN_PERSONAL_URN` | URN personale dell'account LinkedIn |
+| `LINKEDIN_PERSON_URN` | URN personale dell'account LinkedIn |
 
 ### 3. Configura le variabili di GitHub Actions
 
@@ -53,15 +63,16 @@ Nella stessa sezione, sotto la scheda **Variables**, aggiungi:
 
 | Variabile | Descrizione |
 |---|---|
-| `PODCAST1_RSS_URL` | URL del feed RSS del primo podcast |
-| `PODCAST1_TEMPLATE` | Template del messaggio per il primo podcast |
+| `PODCAST_RSS_URL` | URL del feed RSS del podcast |
+| `LINKEDIN_MESSAGE_TEMPLATE` | Template del messaggio da pubblicare |
+| `TOKEN_CREATED_AT` | Data di creazione del token LinkedIn (formato `YYYY-MM-DD`) |
 
 ### 4. Template del messaggio
 
 I placeholder disponibili sono `{title}` e `{link}`. Esempio:
 
 ```
-🎙️ Nuovo episodio di Pensieri in codice!
+Nuovo episodio di Pensieri in codice!
 
 {title}
 
