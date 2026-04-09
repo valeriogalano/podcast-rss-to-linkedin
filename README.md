@@ -1,6 +1,6 @@
 <div align="center">
   <img src="https://cdn.pensieriincodice.it/images/pensieriincodice-locandina.png" alt="Logo Progetto" width="150"/>
-  <h1>Pensieri In Codice — Episode to LinkedIn</h1>
+  <h1>Pensieri in codice — Episode to LinkedIn</h1>
   <p>GitHub Action che pubblica automaticamente i nuovi episodi del podcast su LinkedIn.</p>
   <p>
     <img src="https://img.shields.io/github/stars/valeriogalano/pensieriincodice-episode-to-linkedin?style=for-the-badge" alt="GitHub Stars"/>
@@ -61,7 +61,7 @@ Nella stessa sezione, sotto la scheda **Variables**, aggiungi:
 I placeholder disponibili sono `{title}` e `{link}`. Esempio:
 
 ```
-🎙️ Nuovo episodio di Pensieri in Codice!
+🎙️ Nuovo episodio di Pensieri in codice!
 
 {title}
 
