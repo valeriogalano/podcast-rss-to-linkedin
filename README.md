@@ -16,7 +16,7 @@
 
 ## Come funziona
 
-Il workflow controlla il feed RSS del podcast e pubblica i nuovi episodi sull'account LinkedIn tramite le API ufficiali. Gli episodi già pubblicati vengono tracciati in `published_episodes.txt` per evitare duplicati. Il workflow può essere attivato anche manualmente dalla scheda Actions.
+Il workflow controlla il feed RSS del podcast e pubblica i nuovi episodi sull'account LinkedIn tramite le API ufficiali. L'ultimo episodio pubblicato viene tracciato tramite la variabile GitHub `LAST_PUBLISHED_URL` per evitare duplicati. Il workflow può essere attivato manualmente dalla scheda Actions.
 
 > **Nota sull'autenticazione:** Le API di LinkedIn non restituiscono un `refresh_token`. L'`access_token` ha validità di 60 giorni e richiede un rinnovo manuale periodico tramite lo script `auth.py` del repository [readwise-to-linkedin](https://github.com/valeriogalano/pensieriincodice-news-to-linkedin).
 
@@ -48,7 +48,18 @@ git clone https://github.com/YOUR_USERNAME/pensieriincodice-episode-to-linkedin.
 cd pensieriincodice-episode-to-linkedin
 ```
 
-### 2. Configura i secrets di GitHub Actions
+### 2. Sviluppo locale (opzionale)
+
+Per eseguire lo script in locale, crea e attiva un virtual environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+# .venv\Scripts\activate   # Windows
+pip install -r requirements.txt
+```
+
+### 3. Configura i secrets di GitHub Actions
 
 In **Settings → Secrets and variables → Actions**, aggiungi i seguenti **Secrets**:
 
@@ -57,7 +68,7 @@ In **Settings → Secrets and variables → Actions**, aggiungi i seguenti **Sec
 | `LINKEDIN_ACCESS_TOKEN` | Access token LinkedIn (validità 60 giorni) |
 | `LINKEDIN_PERSON_URN` | URN personale dell'account LinkedIn |
 
-### 3. Configura le variabili di GitHub Actions
+### 4. Configura le variabili di GitHub Actions
 
 Nella stessa sezione, sotto la scheda **Variables**, aggiungi:
 
@@ -67,7 +78,7 @@ Nella stessa sezione, sotto la scheda **Variables**, aggiungi:
 | `LINKEDIN_MESSAGE_TEMPLATE` | Template del messaggio da pubblicare |
 | `TOKEN_CREATED_AT` | Data di creazione del token LinkedIn (formato `YYYY-MM-DD`) |
 
-### 4. Template del messaggio
+### 5. Template del messaggio
 
 I placeholder disponibili sono `{title}` e `{link}`. Esempio:
 
